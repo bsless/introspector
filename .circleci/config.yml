@@ -46,17 +46,17 @@ jobs:
             matches:
               pattern: "^master$"
               value: << pipeline.git.branch >>
-            steps:
-              - checkout
-              - restore_cache:
-                  keys:
-                    - v1-dependencies-{{ checksum "project.clj" }}
-                    - v1-dependencies-
-              - save_cache:
-                  paths:
-                    - ~/.m2
-                  key: v1-dependencies-{{ checksum "project.clj" }}
-              - run: lein do clean, deploy clojars
+          steps:
+            - checkout
+            - restore_cache:
+                keys:
+                  - v1-dependencies-{{ checksum "project.clj" }}
+                  - v1-dependencies-
+            - save_cache:
+                paths:
+                  - ~/.m2
+                key: v1-dependencies-{{ checksum "project.clj" }}
+            - run: lein do clean, deploy clojars
 
 
 workflows:
