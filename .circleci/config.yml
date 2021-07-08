@@ -41,6 +41,7 @@ jobs:
       LEIN_ROOT: "true"
 
     steps:
+      - run: echo deploy
       - when:
           condition:
             matches:
