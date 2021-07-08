@@ -32,10 +32,6 @@ jobs:
       - run: lein test
 
   deploy:
-    condition:
-      matches:
-        pattern: "^master$"
-        value: << pipeline.git.branch >>
     docker:
       - image: circleci/clojure:lein-2.9.5
 
@@ -45,16 +41,22 @@ jobs:
       LEIN_ROOT: "true"
 
     steps:
-      - checkout
-      - restore_cache:
-          keys:
-            - v1-dependencies-{{ checksum "project.clj" }}
-            - v1-dependencies-
-      - save_cache:
-          paths:
-            - ~/.m2
-          key: v1-dependencies-{{ checksum "project.clj" }}
-      - run: lein do clean, deploy clojars
+      - when:
+          condition:
+            matches:
+              pattern: "^master$"
+              value: << pipeline.git.branch >>
+            steps:
+              - checkout
+              - restore_cache:
+                  keys:
+                    - v1-dependencies-{{ checksum "project.clj" }}
+                    - v1-dependencies-
+              - save_cache:
+                  paths:
+                    - ~/.m2
+                  key: v1-dependencies-{{ checksum "project.clj" }}
+              - run: lein do clean, deploy clojars
 
 
 workflows:
